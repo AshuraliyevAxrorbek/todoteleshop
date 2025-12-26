@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0088cc">
+    <title>Teleshop To-Do</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            /* Telegram Light Theme */
+            --tg-primary: #0088cc;
+            --tg-primary-dark: #006ba1;
+            --tg-secondary: #5288c1;
+            --tg-accent: #64b5ef;
+            --tg-bg: #ffffff;
+            --tg-bg-secondary: #f4f4f5;
+            --tg-surface: #ffffff;
+            --tg-text: #000000;
+            --tg-text-secondary: #707579;
+            --tg-border: #e5e5ea;
+            --tg-success: #4dcd5e;
+            --tg-danger: #ff3b30;
+            --tg-warning: #ffcc00;
+            --tg-purple: #8e44ad;
+            --tg-orange: #ff9500;
+            --tg-pink: #ff2d55;
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+        }
+        
+        [data-theme="dark"] {
+            --tg-primary: #64b5ef;
+            --tg-primary-dark: #4da6e8;
+            --tg-secondary: #5288c1;
+            --tg-accent: #7ec4f7;
+            --tg-bg: #0e1621;
+            --tg-bg-secondary: #17212b;
+            --tg-surface: #1c2733;
+            --tg-text: #ffffff;
+            --tg-text-secondary: #a0a0a0;
+            --tg-border: #2b3945;
+            --tg-success: #4dcd5e;
+            --tg-danger: #ff3b30;
+            --tg-warning: #ffcc00;
+            --tg-purple: #9b59b6;
+            --tg-orange: #ff9500;
+            --tg-pink: #ff2d55;
+            
+            --glass-bg: rgba(28, 39, 51, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--tg-bg);
+            color: var(--tg-text);
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        [data-theme="light"] .bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        [data-theme="dark"] .bg-gradient {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 25%, #2c5364 50%, #1e3c72 75%, #2a5298 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            margin-bottom: 20px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--tg-primary), var(--tg-accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tg-text);
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-subtitle {
+            font-size: 12px;
+            color: var(--tg-text-secondary);
+            font-weight: 400;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 18px;
+        }
+        
+        .icon-button:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .icon-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Glass Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--tg-text);
+            display: block;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: var(--tg-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        
+        /* Input Section */
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .input-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--tg-text);
+        }
+        
+        .quick-add-toggle {
+            font-size: 12px;
+            color: var(--tg-primary);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            margin-bottom: 12px;
+        }
+        
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--tg-text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--tg-bg-secondary);
+            border: 1.5px solid var(--tg-border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--tg-text);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--tg-primary);
+            background: var(--tg-surface);
+            box-shadow: 0 0 0 4px rgba(100, 181, 239, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        /* Color & Priority Picker */
+        .picker-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .color-option, .priority-option {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .color-option:hover, .priority-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.active, .priority-option.active {
+            border-color: var(--tg-text);
+            box-shadow: 0 0 0 3px rgba(100, 181, 239, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .color-option.active::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .priority-option {
+            background: var(--tg-bg-secondary);
+            color: var(--tg-text);
+        }
+        
+        .priority-option.active {
+            background: var(--tg-primary);
+            color: white;
+        }
+        
+        /* Category Tags */
+        .category-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tag {
+            padding: 8px 14px;
+            background: var(--tg-bg-secondary);
+            border: 1.5px solid var(--tg-border);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .category-tag:hover {
+            background: var(--tg-primary);
+            color: white;
+            border-color: var(--tg-primary);
+        }
+        
+        .category-tag.active {
+            background: var(--tg-primary);
+            color: white;
+            border-color: var(--tg-primary);
+        }
+        
+        /* Date Time Picker */
+        .datetime-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--tg-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(100, 181, 239, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--tg-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(100, 181, 239, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--tg-bg-secondary);
+            color: var(--tg-text);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--tg-border);
+        }
+        
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 16px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 4px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tg-text-secondary);
+        }
+        
+        .tab.active {
+            background: var(--tg-primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(100, 181, 239, 0.3);
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding: 4px 0;
+            scrollbar-width: none;
+        }
+        
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-chip {
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            color: var(--tg-text-secondary);
+        }
+        
+        .filter-chip.active {
+            background: var(--tg-primary);
+            color: white;
+            border-color: var(--tg-primary);
+        }
+        
+        .filter-chip:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .search-input {
+            padding-left: 44px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--tg-text-secondary);
+            font-size: 16px;
+        }
+        
+        /* Todo List */
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .todo-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .todo-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--item-color);
+        }
+        
+        .todo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+        
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--tg-text-secondary);
+        }
+        
+        .todo-header-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--item-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        
+        .custom-checkbox.checked {
+            background: var(--item-color);
+        }
+        
+        .custom-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .todo-content {
+            flex: 1;
+        }
+        
+        .todo-text-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .todo-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--tg-text);
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .priority-high { background: rgba(255, 59, 48, 0.15); color: var(--tg-danger); }
+        .priority-medium { background: rgba(255, 204, 0, 0.15); color: var(--tg-warning); }
+        .priority-low { background: rgba(100, 181, 239, 0.15); color: var(--tg-primary); }
+        
+        .todo-description {
+            font-size: 13px;
+            color: var(--tg-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .todo-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            color: var(--tg-text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .category-badge {
+            padding: 4px 10px;
+            background: var(--tg-bg-secondary);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .todo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--tg-border);
+        }
+        
+        .todo-date {
+            font-size: 11px;
+            color: var(--tg-text-secondary);
+        }
+        
+        .todo-actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .action-btn.edit {
+            background: rgba(100, 181, 239, 0.15);
+            color: var(--tg-primary);
+        }
+        
+        .action-btn.delete {
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--tg-danger);
+        }
+        
+        .action-btn.share {
+            background: rgba(77, 205, 94, 0.15);
+            color: var(--tg-success);
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            color: var(--tg-text-secondary);
+            font-weight: 500;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-content {
+            background: var(--tg-surface);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--tg-border);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--tg-text);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--tg-bg-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--tg-danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        /* Settings */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+        
+        .settings-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tg-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--tg-border);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-size: 15px;
+            color: var(--tg-text);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            background: var(--tg-border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--tg-primary);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--tg-bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--tg-border);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--tg-text-secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 400px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .logo-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-icon">✓</div>
+                <div class="logo-text">
+                    <div class="logo-title">Teleshop To-Do</div>
+                    <div class="logo-subtitle">Rejalaringizni boshqaring</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="icon-button" onclick="toggleTheme()" title="Mavzu">🌓</div>
+                <div class="icon-button" onclick="openSettings()" title="Sozlamalar">⚙️</div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <span class="stat-value" id="totalTasks">0</span>
+                <span class="stat-label">Jami</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🔥</span>
+                <span class="stat-value" id="activeTasks">0</span>
+                <span class="stat-label">Aktiv</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">✅</span>
+                <span class="stat-value" id="completedTasks">0</span>
+                <span class="stat-label">Bajarildi</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📈</span>
+                <span class="stat-value" id="progressPercent">0%</span>
+                <span class="stat-label">Progress</span>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="glass-card input-section">
+            <div class="input-header">
+                <div class="input-title">Yangi vazifa yaratish</div>
+                <div class="quick-add-toggle" onclick="toggleQuickAdd()">Tez qo'shish</div>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-label">📝 Vazifa nomi</div>
+                <input type="text" id="taskTitle" placeholder="Masalan: Darslik o'qish">
+            </div>
+            
+            <div class="input-group" id="descriptionGroup">
+                <div class="input-label">📄 Tavsif</div>
+                <textarea id="taskDescription" placeholder="Vazifa haqida batafsil..."></textarea>
+            </div>
+            
+            <div class="input-group" id="categoryGroup">
+                <div class="input-label">🏷️ Kategoriya</div>
+                <div class="category-tags">
+                    <div class="category-tag" data-category="ish">💼 Ish</div>
+                    <div class="category-tag" data-category="shaxsiy">👤 Shaxsiy</div>
+                    <div class="category-tag" data-category="oquv">📚 O'quv</div>
+                    <div class="category-tag" data-category="sport">⚽ Sport</div>
+                    <div class="category-tag" data-category="savdo">🛒 Savdo</div>
+                    <div class="category-tag" data-category="boshqa">📌 Boshqa</div>
+                </div>
+            </div>
+            
+            <div class="input-group" id="priorityGroup">
+                <div class="input-label">⭐ Muhimlik darajasi</div>
+                <div class="picker-grid">
+                    <div class="priority-option active" data-priority="low">Kam</div>
+                    <div class="priority-option" data-priority="medium">O'rta</div>
+                    <div class="priority-option" data-priority="high">Yuqori</div>
+                </div>
+            </div>
+            
+            <div class="input-group" id="colorGroup">
+                <div class="input-label">🎨 Rang</div>
+                <div class="picker-grid">
+                    <div class="color-option active" data-color="#0088cc" style="background: #0088cc;"></div>
+                    <div class="color-option" data-color="#4dcd5e" style="background: #4dcd5e;"></div>
+                    <div class="color-option" data-color="#ff9500" style="background: #ff9500;"></div>
+                    <div class="color-option" data-color="#ff3b30" style="background: #ff3b30;"></div>
+                    <div class="color-option" data-color="#8e44ad" style="background: #8e44ad;"></div>
+                    <div class="color-option" data-color="#ff2d55" style="background: #ff2d55;"></div>
+                    <div class="color-option" data-color="#ffcc00" style="background: #ffcc00;"></div>
+                    <div class="color-option" data-color="#5288c1" style="background: #5288c1;"></div>
+                </div>
+            </div>
+            
+            <div class="input-group" id="dateGroup">
+                <div class="input-label">📅 Muddati</div>
+                <div class="datetime-grid">
+                    <input type="date" id="taskDate">
+                    <input type="time" id="taskTime">
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="addTask()">
+                <span id="btnIcon">➕</span>
+                <span id="btnText">Vazifa qo'shish</span>
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="all" onclick="switchTab('all')">Barchasi</div>
+                <div class="tab" data-tab="active" onclick="switchTab('active')">Aktiv</div>
+                <div class="tab" data-tab="completed" onclick="switchTab('completed')">Bajarilgan</div>
+                <div class="tab" data-tab="history" onclick="switchTab('history')">Tarix</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Qidirish..." oninput="searchTasks()">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-chip active" data-filter="all" onclick="setFilter('all')">Barchasi</div>
+            <div class="filter-chip" data-filter="today" onclick="setFilter('today')">Bugun</div>
+            <div class="filter-chip" data-filter="week" onclick="setFilter('week')">Bu hafta</div>
+            <div class="filter-chip" data-filter="month" onclick="setFilter('month')">Bu oy</div>
+            <div class="filter-chip" data-filter="high" onclick="setFilter('high')">Muhim</div>
+        </div>
+
+        <!-- Todo List -->
+        <div id="todoList" class="todo-list"></div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">✏️ Vazifani tahrirlash</div>
+                <button class="modal-close" onclick="closeEditModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-label">📝 Vazifa nomi</div>
+                    <input type="text" id="editTaskTitle">
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">📄 Tavsif</div>
+                    <textarea id="editTaskDescription"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">🏷️ Kategoriya</div>
+                    <div class="category-tags" id="editCategoryTags">
+                        <div class="category-tag" data-category="ish">💼 Ish</div>
+                        <div class="category-tag" data-category="shaxsiy">👤 Shaxsiy</div>
+                        <div class="category-tag" data-category="oquv">📚 O'quv</div>
+                        <div class="category-tag" data-category="sport">⚽ Sport</div>
+                        <div class="category-tag" data-category="savdo">🛒 Savdo</div>
+                        <div class="category-tag" data-category="boshqa">📌 Boshqa</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">⭐ Muhimlik</div>
+                    <div class="picker-grid" id="editPriorityPicker">
+                        <div class="priority-option" data-priority="low">Kam</div>
+                        <div class="priority-option" data-priority="medium">O'rta</div>
+                        <div class="priority-option" data-priority="high">Yuqori</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">🎨 Rang</div>
+                    <div class="picker-grid" id="editColorPicker">
+                        <div class="color-option" data-color="#0088cc" style="background: #0088cc;"></div>
+                        <div class="color-option" data-color="#4dcd5e" style="background: #4dcd5e;"></div>
+                        <div class="color-option" data-color="#ff9500" style="background: #ff9500;"></div>
+                        <div class="color-option" data-color="#ff3b30" style="background: #ff3b30;"></div>
+                        <div class="color-option" data-color="#8e44ad" style="background: #8e44ad;"></div>
+                        <div class="color-option" data-color="#ff2d55" style="background: #ff2d55;"></div>
+                        <div class="color-option" data-color="#ffcc00" style="background: #ffcc00;"></div>
+                        <div class="color-option" data-color="#5288c1" style="background: #5288c1;"></div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">📅 Muddati</div>
+                    <div class="datetime-grid">
+                        <input type="date" id="editTaskDate">
+                        <input type="time" id="editTaskTime">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveEdit()">💾 Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">⚙️ Sozlamalar</div>
+                <button class="modal-close" onclick="closeSettings()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-group">
+                    <div class="settings-title">Ko'rinish</div>
+                    <div class="setting-item">
+                        <div class="setting-label">Qorong'u rejim</div>
+                        <div class="toggle-switch" id="darkModeToggle" onclick="toggleTheme()"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Animatsiyalar</div>
+                        <div class="toggle-switch active" id="animationsToggle" onclick="toggleAnimations()"></div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <div class="settings-title">Bildirishnomalar</div>
+                    <div class="setting-item">
+                        <div class="setting-label">Push xabarnomalar</div>
+                        <div class="toggle-switch active" id="notificationsToggle" onclick="toggleNotifications()"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Muddati tugagan vazifalar</div>
+                        <div class="toggle-switch active" id="overdueToggle" onclick="toggleOverdue()"></div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <div class="settings-title">Ma'lumotlar</div>
+                    <button class="btn btn-secondary" onclick="exportData()">📤 Ma'lumotlarni eksport qilish</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()" style="margin-top: 8px;">📥 Ma'lumotlarni import qilish</button>
+                    <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
+                    <button class="btn btn-secondary" onclick="clearAllData()" style="margin-top: 8px; background: var(--tg-danger); color: white;">🗑️ Barcha ma'lumotlarni o'chirish</button>
+                </div>
+                
+                <div class="settings-group">
+                    <div class="settings-title">Ilova haqida</div>
+                    <div style="text-align: center; padding: 20px; color: var(--tg-text-secondary);">
+                        <div style="font-size: 48px; margin-bottom: 12px;">✓</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Teleshop To-Do</div>
+                        <div style="font-size: 13px;">Versiya 2.0</div>
+                        <div style="font-size: 12px; margin-top: 8px;">Telegram UX Design by Pavel Durov</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // O'zbekiston vaqti UTC+5
+        const UZ_OFFSET = 5 * 60;
+        
+        function getUzTime() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            return new Date(utc + (UZ_OFFSET * 60000));
+        }
+        
+        function formatDate(date) {
+            const d = new Date(date);
+            const day = d.getDate().toString().padStart(2, '0');
+            const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            const year = d.getFullYear();
+            const hours = d.getHours().toString().padStart(2, '0');
+            const minutes = d.getMinutes().toString().padStart(2, '0');
+            return `${day}.${month}.${year} ${hours}:${minutes}`;
+        }
+
+        // Ma'lumotlar
+        let todos = JSON.parse(localStorage.getItem('teleshop-todos-v2')) || [];
+        let history = JSON.parse(localStorage.getItem('teleshop-history-v2')) || [];
+        let settings = JSON.parse(localStorage.getItem('teleshop-settings')) || {
+            darkMode: false,
+            animations: true,
+            notifications: true,
+            overdueAlerts: true
+        };
+        
+        let selectedColor = '#0088cc';
+        let selectedCategory = '';
+        let selectedPriority = 'low';
+        let editingId = null;
+        let currentTab = 'all';
+        let currentFilter = 'all';
+        let isQuickAdd = false;
+
+        // Initializatsiya
+        function init() {
+            initTheme();
+            initEventListeners();
+            renderTodos();
+            updateStats();
+            checkOverdueTasks();
+        }
+
+        function initTheme() {
+            if (settings.darkMode) {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('darkModeToggle').classList.add('active');
+            }
+        }
+
+        function initEventListeners() {
+            // Category tags
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                    if (selectedCategory === this.dataset.category) {
+                        selectedCategory = '';
+                    } else {
+                        this.classList.add('active');
+                        selectedCategory = this.dataset.category;
+                    }
+                });
+            });
+
+            // Priority options
+            document.querySelectorAll('.priority-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.priority-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedPriority = this.dataset.priority;
+                });
+            });
+
+            // Color options
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedColor = this.dataset.color;
+                });
+            });
+
+            // Edit modal handlers
+            document.querySelectorAll('#editCategoryTags .category-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    document.querySelectorAll('#editCategoryTags .category-tag').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('#editPriorityPicker .priority-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('#editPriorityPicker .priority-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Enter key handler
+            document.getElementById('taskTitle').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addTask();
+            });
+
+            // Modal close on background click
+            document.getElementById('editModal').addEventListener('click', function(e) {
+                if (e.target === this) closeEditModal();
+            });
+            document.getElementById('settingsModal').addEventListener('click', function(e) {
+                if (e.target === this) closeSettings();
+            });
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            settings.darkMode = !settings.darkMode;
+            document.body.setAttribute('data-theme', settings.darkMode ? 'dark' : 'light');
+            document.getElementById('darkModeToggle').classList.toggle('active');
+            saveSettings();
+        }
+
+        function toggleAnimations() {
+            settings.animations = !settings.animations;
+            document.getElementById('animationsToggle').classList.toggle('active');
+            saveSettings();
+        }
+
+        function toggleNotifications() {
+            settings.notifications = !settings.notifications;
+            document.getElementById('notificationsToggle').classList.toggle('active');
+            saveSettings();
+        }
+
+        function toggleOverdue() {
+            settings.overdueAlerts = !settings.overdueAlerts;
+            document.getElementById('overdueToggle').classList.toggle('active');
+            saveSettings();
+        }
+
+        function saveSettings() {
+            localStorage.setItem('teleshop-settings', JSON.stringify(settings));
+        }
+
+        // Quick add toggle
+        function toggleQuickAdd() {
+            isQuickAdd = !isQuickAdd;
+            const groups = ['descriptionGroup', 'categoryGroup', 'priorityGroup', 'colorGroup', 'dateGroup'];
+            groups.forEach(id => {
+                document.getElementById(id).style.display = isQuickAdd ? 'none' : 'block';
+            });
+        }
+
+        // Add task
+        function addTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            if (!title) {
+                alert('❌ Vazifa nomini kiriting!');
+                return;
+            }
+
+            const description = document.getElementById('taskDescription').value.trim();
+            const date = document.getElementById('taskDate').value;
+            const time = document.getElementById('taskTime').value;
+            
+            let dueDate = null;
+            if (date) {
+                dueDate = new Date(date);
+                if (time) {
+                    const [hours, minutes] = time.split(':');
+                    dueDate.setHours(hours, minutes);
+                }
+            }
+
+            const newTodo = {
+                id: Date.now(),
+                title,
+                description,
+                category: selectedCategory,
+                priority: selectedPriority,
+                color: selectedColor,
+                dueDate: dueDate ? dueDate.toISOString() : null,
+                completed: false,
+                createdAt: getUzTime().toISOString(),
+                completedAt: null
+            };
+
+            todos.unshift(newTodo);
+            saveTodos();
+            addToHistory('added', title);
+
+            // Reset form
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskDate').value = '';
+            document.getElementById('taskTime').value = '';
+            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+            selectedCategory = '';
+
+            renderTodos();
+            updateStats();
+        }
+
+        // Render todos
+        function renderTodos() {
+            const container = document.getElementById('todoList');
+            let filtered = [...todos];
+
+            // Tab filter
+            if (currentTab === 'active') {
+                filtered = filtered.filter(t => !t.completed);
+            } else if (currentTab === 'completed') {
+                filtered = filtered.filter(t => t.completed);
+            } else if (currentTab === 'history') {
+                renderHistory();
+                return;
+            }
+
+            // Time filter
+            const now = getUzTime();
+            if (currentFilter === 'today') {
+                filtered = filtered.filter(t => {
+                    const diff = now - new Date(t.createdAt);
+                    return diff < 86400000;
+                });
+            } else if (currentFilter === 'week') {
+                filtered = filtered.filter(t => {
+                    const diff = now - new Date(t.createdAt);
+                    return diff < 604800000;
+                });
+            } else if (currentFilter === 'month') {
+                filtered = filtered.filter(t => {
+                    const diff = now - new Date(t.createdAt);
+                    return diff < 2592000000;
+                });
+            } else if (currentFilter === 'high') {
+                filtered = filtered.filter(t => t.priority === 'high');
+            }
+
+            // Search filter
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            if (search) {
+                filtered = filtered.filter(t => 
+                    t.title.toLowerCase().includes(search) || 
+                    t.description.toLowerCase().includes(search)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <div class="empty-text">Vazifalar topilmadi</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(todo => {
+                const isOverdue = todo.dueDate && new Date(todo.dueDate) < now && !todo.completed;
+                const categoryEmoji = {
+                    'ish': '💼',
+                    'shaxsiy': '👤',
+                    'oquv': '📚',
+                    'sport': '⚽',
+                    'savdo': '🛒',
+                    'boshqa': '📌'
+                };
+                
+                return `
+                    <div class="todo-item ${todo.completed ? 'completed' : ''}" style="--item-color: ${todo.color}">
+                        <div class="todo-header-row">
+                            <div class="custom-checkbox ${todo.completed ? 'checked' : ''}" 
+                                 onclick="toggleTodo(${todo.id})"
+                                 style="border-color: ${todo.color}; ${todo.completed ? `background: ${todo.color}` : ''}">
+                            </div>
+                            <div class="todo-content">
+                                <div class="todo-text-row">
+                                    <div class="todo-text">${todo.title}</div>
+                                    ${todo.priority !== 'low' ? `<div class="priority-badge priority-${todo.priority}">${todo.priority === 'high' ? 'Yuqori' : "O'rta"}</div>` : ''}
+                                </div>
+                                ${todo.description ? `<div class="todo-description">${todo.description}</div>` : ''}
+                                <div class="todo-meta">
+                                    ${todo.category ? `<div class="category-badge">${categoryEmoji[todo.category] || '📌'} ${getCategoryName(todo.category)}</div>` : ''}
+                                    ${todo.dueDate ? `<div class="meta-item">${isOverdue ? '⚠️' : '📅'} ${formatDate(todo.dueDate)}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="todo-footer">
+                            <div class="todo-date">
+                                🕐 ${formatDate(todo.createdAt)}
+                                ${todo.completed ? `<br>✅ ${formatDate(todo.completedAt)}` : ''}
+                            </div>
+                            <div class="todo-actions">
+                                <button class="action-btn share" onclick="shareTodo(${todo.id})" title="Ulashish">📤</button>
+                                <button class="action-btn edit" onclick="editTodo(${todo.id})" title="Tahrirlash">✏️</button>
+                                <button class="action-btn delete" onclick="deleteTodo(${todo.id})" title="O'chirish">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'ish': 'Ish',
+                'shaxsiy': 'Shaxsiy',
+                'oquv': "O'quv",
+                'sport': 'Sport',
+                'savdo': 'Savdo',
+                'boshqa': 'Boshqa'
+            };
+            return names[category] || category;
+        }
+
+        // Render history
+        function renderHistory() {
+            const container = document.getElementById('todoList');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📜</div>
+                        <div class="empty-text">Tarix bo'sh</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const sorted = [...history].reverse();
+            const actionEmoji = {
+                'added': '➕',
+                'completed': '✅',
+                'edited': '✏️',
+                'deleted': '🗑️'
+            };
+
+            container.innerHTML = sorted.map(item => `
+                <div class="glass-card" style="padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 12px; color: var(--tg-text-secondary);">🕐 ${formatDate(item.date)}</span>
+                        <span style="font-size: 20px;">${actionEmoji[item.action]}</span>
+                    </div>
+                    <div style="font-size: 14px; color: var(--tg-text); font-weight: 500;">${item.title}</div>
+                </div>
+            `).join('') + `
+                <button class="btn btn-secondary" onclick="clearHistory()" style="background: var(--tg-danger); color: white;">
+                    🗑️ Tarixni tozalash
+                </button>
+            `;
+        }
+
+        // Toggle todo
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                todo.completedAt = todo.completed ? getUzTime().toISOString() : null;
+                saveTodos();
+                
+                if (todo.completed) {
+                    addToHistory('completed', todo.title);
+                }
+                
+                renderTodos();
+                updateStats();
+            }
+        }
+
+        // Edit todo
+        function editTodo(id) {
+            editingId = id;
+            const todo = todos.find(t => t.id === id);
+            
+            if (todo) {
+                document.getElementById('editTaskTitle').value = todo.title;
+                document.getElementById('editTaskDescription').value = todo.description;
+                
+                // Category
+                document.querySelectorAll('#editCategoryTags .category-tag').forEach(t => {
+                    t.classList.remove('active');
+                    if (t.dataset.category === todo.category) t.classList.add('active');
+                });
+                
+                // Priority
+                document.querySelectorAll('#editPriorityPicker .priority-option').forEach(p => {
+                    p.classList.remove('active');
+                    if (p.dataset.priority === todo.priority) p.classList.add('active');
+                });
+                
+                // Color
+                document.querySelectorAll('#editColorPicker .color-option').forEach(c => {
+                    c.classList.remove('active');
+                    if (c.dataset.color === todo.color) c.classList.add('active');
+                });
+                
+                // Date
+                if (todo.dueDate) {
+                    const d = new Date(todo.dueDate);
+                    document.getElementById('editTaskDate').value = d.toISOString().split('T')[0];
+                    document.getElementById('editTaskTime').value = d.toTimeString().slice(0, 5);
+                }
+                
+                document.getElementById('editModal').classList.add('active');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingId = null;
+        }
+
+        function saveEdit() {
+            if (!editingId) return;
+            
+            const title = document.getElementById('editTaskTitle').value.trim();
+            if (!title) {
+                alert('❌ Vazifa nomini kiriting!');
+                return;
+            }
+            
+            const todo = todos.find(t => t.id === editingId);
+            if (todo) {
+                todo.title = title;
+                todo.description = document.getElementById('editTaskDescription').value.trim();
+                todo.category = document.querySelector('#editCategoryTags .category-tag.active')?.dataset.category || '';
+                todo.priority = document.querySelector('#editPriorityPicker .priority-option.active')?.dataset.priority || 'low';
+                todo.color = document.querySelector('#editColorPicker .color-option.active')?.dataset.color || '#0088cc';
+                
+                const date = document.getElementById('editTaskDate').value;
+                const time = document.getElementById('editTaskTime').value;
+                if (date) {
+                    const dueDate = new Date(date);
+                    if (time) {
+                        const [hours, minutes] = time.split(':');
+                        dueDate.setHours(hours, minutes);
+                    }
+                    todo.dueDate = dueDate.toISOString();
+                } else {
+                    todo.dueDate = null;
+                }
+                
+                saveTodos();
+                addToHistory('edited', title);
+                closeEditModal();
+                renderTodos();
+            }
+        }
+
+        // Delete todo
+        function deleteTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo && confirm('❓ Vazifani o\'chirmoqchimisiz?')) {
+                todos = todos.filter(t => t.id !== id);
+                saveTodos();
+                addToHistory('deleted', todo.title);
+                renderTodos();
+                updateStats();
+            }
+        }
+
+        // Share todo
+        function shareTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                const text = `📋 ${todo.title}\n${todo.description ? todo.description + '\n' : ''}${todo.dueDate ? '📅 ' + formatDate(todo.dueDate) : ''}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Teleshop To-Do',
+                        text: text
+                    });
+                } else {
+                    navigator.clipboard.writeText(text);
+                    alert('✅ Matn nusxalandi!');
+                }
+            }
+        }
+
+        // History functions
+        function addToHistory(action, title) {
+            history.push({
+                action,
+                title,
+                date: getUzTime().toISOString()
+            });
+            localStorage.setItem('teleshop-history-v2', JSON.stringify(history));
+        }
+
+        function clearHistory() {
+            if (confirm('❓ Tarixni tozalamoqchimisiz?')) {
+                history = [];
+                localStorage.setItem('teleshop-history-v2', JSON.stringify(history));
+                renderHistory();
+            }
+        }
+
+        // Tabs and filters
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            renderTodos();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-chip').forEach(f => f.classList.remove('active'));
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+            renderTodos();
+        }
+
+        function searchTasks() {
+            renderTodos();
+        }
+
+        // Storage functions
+        function saveTodos() {
+            localStorage.setItem('teleshop-todos-v2', JSON.stringify(todos));
+        }
+
+        // Stats
+        function updateStats() {
+            const total = todos.length;
+            const completed = todos.filter(t => t.completed).length;
+            const active = total - completed;
+            const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('activeTasks').textContent = active;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('progressPercent').textContent = progress + '%';
+        }
+
+        // Check overdue tasks
+        function checkOverdueTasks() {
+            if (!settings.overdueAlerts) return;
+            
+            const now = getUzTime();
+            const overdue = todos.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < now);
+            
+            if (overdue.length > 0 && settings.notifications) {
+                console.log(`⚠️ ${overdue.length} ta muddati o'tgan vazifa!`);
+            }
+        }
+
+        // Settings modal
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // Data management
+        function exportData() {
+            const data = {
+                todos,
+                history,
+                settings,
+                exportDate: getUzTime().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `teleshop-backup-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Ma\'lumotlar eksport qilindi!');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (confirm('❓ Mavjud ma\'lumotlar o\'chiriladi. Davom etasizmi?')) {
+                        todos = data.todos || [];
+                        history = data.history || [];
+                        settings = data.settings || settings;
+                        
+                        saveTodos();
+                        localStorage.setItem('teleshop-history-v2', JSON.stringify(history));
+                        saveSettings();
+                        
+                        init();
+                        alert('✅ Ma\'lumotlar import qilindi!');
+                    }
+                } catch (err) {
+                    alert('❌ Xato fayl formati!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (confirm('❓ BARCHA ma\'lumotlar o\'chiriladi! Davom etasizmi?')) {
+                if (confirm('⚠️ Bu amalni qaytarib bo\'lmaydi! Ishonchingiz komilmi?')) {
+                    localStorage.clear();
+                    todos = [];
+                    history = [];
+                    location.reload();
+                }
+            }
+        }
+
+        // Initialize
+        init();
+        setInterval(checkOverdueTasks, 60000); // Check every minute
+    </script>
+</body>
+</html>
